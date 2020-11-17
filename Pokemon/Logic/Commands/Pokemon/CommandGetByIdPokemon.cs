@@ -1,9 +1,6 @@
 ﻿using Pokemon.Common.Entities;
 using Pokemon.Persistence.DaoMongoDB;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Pokemon.Logic.Commands.Pokemon
 {

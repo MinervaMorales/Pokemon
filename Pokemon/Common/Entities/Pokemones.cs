@@ -12,5 +12,6 @@ namespace Pokemon.Common.Entities
         public string Nombre { get; set; }
         public IList<Poder> Poderes { get; set; }
         public Categoria Categoria { get; set; }
+        public string Observaciones { get; set; }
     }
 }

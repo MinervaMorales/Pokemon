@@ -15,7 +15,7 @@ namespace Pokemon.Persistence.DaoSqlServer
         /// <param name="pokemon"></param>
         public void Add(Pokemones pokemon)
         {
-            string query = @"INSERT INTO Pokemon (nombre, observaciones) VALUES (@Nombre,@Observaciones)";
+            string query = @"INSERT INTO pokem (nombre, categoria_id, salud, observaciones) VALUES (@Nombre,@Categoria, @Salud, @Observaciones)";
             
             try
             {
@@ -40,12 +40,24 @@ namespace Pokemon.Persistence.DaoSqlServer
         /// <returns></returns>
         public IEnumerable<Pokemones> GetAll()
         {
-     
-           string query = @"Select * From Pokemon";
-
             try
             {
-                return Connect().Query<Pokemones>(query);
+                var query = Connect()
+                .Query<Pokemones, Poder, Categoria, Pokemones>($@"
+                    SELECT pk.poke_id, pk.nombre,  pk.salud, pk.observaciones, pk_pd.poder_id, pd.descripcion, 
+                    pk.categoria_id, cat.descripcion FROM pokem AS pk  JOIN poke_poder as pk_pd 
+                    ON pk.poke_id = pk_pd.poke_id INNER JOIN poderes AS pd ON pd.poder_id = pk_pd.poder_id 
+                    INNER JOIN categoria AS cat ON cat.categoria_id = pk.categoria_id",
+                    (pk, pd, cat) =>
+                    {
+                        pk.Poderes = pk.Poderes ?? new List<Poder>();
+                        pk.Poderes.Add(pd);
+                        pk.Categoria = cat;
+                        return pk;
+                    })//, splitOn: "poderes_id, categoria_id" 
+                .AsQueryable();
+
+                return query.ToList();
             }
             catch( Exception e )
             {
@@ -59,20 +71,29 @@ namespace Pokemon.Persistence.DaoSqlServer
                  
         }
 
-
         /// <summary>
         /// Metodo para obtener un pokemon por id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Pokemones GetById(int id)
+        public Pokemones GetById( int id )
         {
-            
-           string query = @"Select * From Pokemon where PokemonId=@Id";
-
+            Pokemones pokemon;
             try
             {
-                return Connect().Query<Pokemones>(query, new { Id = id }).FirstOrDefault();
+                pokemon  = Connect()
+                  .Query<Pokemones, Poder, Categoria, Pokemones>($@"
+                    SELECT pk.poke_id, pk.nombre,  pk.salud,  pk.observaciones, pk_pd.poder_id, pd.descripcion, 
+                    pk.categoria_id, cat.descripcion FROM pokem AS pk  JOIN poke_poder as pk_pd 
+                    ON pk.poke_id = pk_pd.poke_id INNER JOIN poderes AS pd ON pd.poder_id = pk_pd.poder_id 
+                    INNER JOIN categoria AS cat ON cat.categoria_id = pk.categoria_id WHERE pk.poke_id=@Id",
+                      (pk, pd, cat) =>
+                      {
+                          pk.Poderes = pk.Poderes ?? new List<Poder>();
+                          pk.Poderes.Add(pd);
+                          pk.Categoria = cat;
+                          return pk;
+                      }, new { Id = id }).FirstOrDefault();
             }
             catch( Exception e )
             {
@@ -81,10 +102,10 @@ namespace Pokemon.Persistence.DaoSqlServer
             finally
             {
                 Disconnect();
+              
             }
 
-
-
+            return pokemon;
         }
 
 
@@ -134,9 +155,30 @@ namespace Pokemon.Persistence.DaoSqlServer
                 Disconnect();
             }
 
-
         }
 
+
+        public List<Pokemones> multipleQueries()
+        {
+         
+                var query = Connect()
+                    .Query<Pokemones, Poder, Categoria, Pokemones>($@"
+                    SELECT pk.poke_id, pk.nombre,  pk.salud, pk_pd.poder_id, pd.descripcion, 
+                    pk.categoria_id, cat.descripcion FROM pokem AS pk  JOIN poke_poder as pk_pd 
+                    ON pk.poke_id = pk_pd.poke_id INNER JOIN poderes AS pd ON pd.poder_id = pk_pd.poder_id 
+                    INNER JOIN categoria AS cat ON cat.categoria_id = pk.categoria_id",
+                        (pk, pd, cat) =>
+                        {
+                            pk.Poderes = pk.Poderes ?? new List<Poder>();
+                            pk.Poderes.Add( pd );
+                            pk.Categoria = cat;
+                            return pk;
+                        })//, splitOn: "poderes_id, categoria_id" 
+                    .AsQueryable();
+
+                return query.ToList();
+        
+        }
 
     }
 }

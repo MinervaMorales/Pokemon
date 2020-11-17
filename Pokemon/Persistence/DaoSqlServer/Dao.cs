@@ -12,9 +12,6 @@ namespace Pokemon.Persistence
     {
 
         private IDbConnection _connection;
-        private DataTable _dataTable;
-        private string _cadena;
-        private int _cantidadRegistros;
 
         private string _connectionString { get; set; }
 
@@ -93,11 +90,6 @@ namespace Pokemon.Persistence
             _connection.Execute(query, entity);
            
         }
-
-
-
-
-
 
 
 
