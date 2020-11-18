@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Pokemon.Common.Entities;
@@ -15,14 +16,24 @@ namespace Pokemon.Persistence
 
         private string _connectionString { get; set; }
 
+        private IConfiguration _configuration { get; }
 
+        public Dao()
+        {
+            IConfigurationBuilder config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables();
+
+            _configuration = config.Build();
+        }
         /// <summary>
         /// Metodo para obtener el string de conexion de la base de datos
         /// </summary>
         /// <param name="configuration"></param>
-        public void getConnectionString( IConfiguration configuration )
+        public void getConnectionString()
         {
-            _connectionString = configuration.GetConnectionString("sqlServer");
+            _connectionString = _configuration.GetConnectionString("sqlServer");
         }
 
         
@@ -35,7 +46,8 @@ namespace Pokemon.Persistence
             try
             {
                 if( !IsConnected() )
-                { 
+                {
+                    getConnectionString();
                     _connection = new SqlConnection( _connectionString );
                     _connection.Open();
                 }

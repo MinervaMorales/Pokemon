@@ -12,6 +12,9 @@ namespace Pokemon.Services.Mappers
 
             entity.Id = dto.IdPokemon;
             entity.Nombre = dto.Nombre;
+            entity.Categoria = dto.Categoria;
+            entity.Salud = dto.Salud;
+            entity.Observaciones = dto.Observaciones;
             entity.Poderes = dto.Poderes;
 
             return entity;
@@ -23,7 +26,10 @@ namespace Pokemon.Services.Mappers
 
             dto.IdPokemon = entity.Id;
             dto.Nombre = entity.Nombre;
-           // dto.Poderes = entity.Poderes;
+            dto.Poderes = entity.Poderes;
+            dto.Categoria = entity.Categoria;
+            dto.Salud = entity.Salud;
+            dto.Observaciones = entity.Observaciones;
 
             return dto;
         }

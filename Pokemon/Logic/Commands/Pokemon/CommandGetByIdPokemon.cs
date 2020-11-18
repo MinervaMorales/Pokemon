@@ -10,9 +10,10 @@ namespace Pokemon.Logic.Commands.Pokemon
         public List<Entity> _pokemones;
         private DaoMongo _dao;
 
-        public CommandGetByIdPokemon()
+        public CommandGetByIdPokemon( Pokemones pokemon)
         {
             _dao = new DaoMongo();
+            _pokemon = pokemon;
         }
 
         /// <summary>

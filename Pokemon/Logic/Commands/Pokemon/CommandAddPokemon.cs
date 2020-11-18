@@ -24,7 +24,7 @@ namespace Pokemon.Logic.Commands.Pokemon
         public override void Execute()
         {
             
-            _dao.Add( _pokemon );
+            _pokemon = _dao.Add( _pokemon );
         }
 
         public override Entity GetEntity()

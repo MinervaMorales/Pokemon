@@ -7,6 +7,7 @@ using Pokemon.Services.Facade;
 using Pokemon.Logic.Commands;
 using Pokemon.Logic.Commands.Pokemon;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Pokemon.Controllers
 {
@@ -16,20 +17,19 @@ namespace Pokemon.Controllers
     {
         private readonly ILogger<Common.Entities.Pokemones> _logger;
 
-        public PokemonesController(ILogger<Common.Entities.Pokemones> logger)
+        public PokemonesController()
         {
-            _logger = logger;
         }
 
 
-
-        [Route("addPokemon")]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult Post([FromBody]PokemonDto dto)
         {
             try
             {
-                if( ModelState.IsValid )
+                if (ModelState.IsValid && dto != null )
                 {
                     Entity pokemon = PokemonMapper.MapDtoToEntity(dto);
 
@@ -38,6 +38,10 @@ namespace Pokemon.Controllers
                     comando = new CommandAddPokemon(pokemon);
 
                     comando.Execute();
+                }
+                else
+                {
+                    return BadRequest();
                 }
 
             }
@@ -49,12 +53,14 @@ namespace Pokemon.Controllers
 
         }
 
-        [HttpPut("{id}")]
-        public ActionResult Put( int id, [FromBody]PokemonDto dto)
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult Put([FromBody]PokemonDto dto)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (ModelState.IsValid && dto != null)
                 {
                     Entity pokemon = PokemonMapper.MapDtoToEntity(dto);
 

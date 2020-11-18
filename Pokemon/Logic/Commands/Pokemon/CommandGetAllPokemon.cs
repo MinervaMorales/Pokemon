@@ -23,7 +23,7 @@ namespace Pokemon.Logic.Commands.Pokemon
         public override void Execute()
         {
 
-           //_pokemones = _dao.GetAll();
+            _pokemones = _dao.GetAll();
         }
 
         public override Entity GetEntity()

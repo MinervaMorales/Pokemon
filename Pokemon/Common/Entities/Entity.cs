@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Pokemon.Common.Entities
 {
     public abstract class Entity
     {
-        public long Id { get; set; }
+        
+        public int Id { get; set; }
+        /*
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string ObjId { get; set; }
+        */
 
     }
 }
