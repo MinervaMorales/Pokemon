@@ -24,7 +24,7 @@ namespace Tests.Persistence.DaoTest.DaoTestMongo
                 poderes.Add(poder);
             }
             Pokemones pokemon = new Pokemones("pokemon 1", poderes, new Categoria(1, "categoria 1"), 500, "observacion");
-
+            pokemon.Id = 4;
             Pokemones result = _dao.Add(pokemon);
 
             _pokemon = result;

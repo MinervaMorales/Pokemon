@@ -12,9 +12,9 @@ namespace Pokemon.Logic.Commands.Pokemon
         private Pokemones _pokemon;
         private DaoPokemon _dao;
 
-        public CommandAddPokemon( Entity pokemon )
+        public CommandAddPokemon( Pokemones pokemon )
         {
-            _pokemon = pokemon as Pokemones;
+            _pokemon = pokemon;
             _dao = new DaoPokemon();
         }
 

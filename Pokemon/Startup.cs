@@ -29,12 +29,10 @@ namespace Pokemon
         {
             // requires using Microsoft.Extensions.Options
 
-           /* services.AddSingleton<DaoMongo>(sp =>
-                sp.GetRequiredService<IOptions<DaoMongo>>().Value);*/
+            /* services.AddSingleton<DaoMongo>(sp =>
+                 sp.GetRequiredService<IOptions<DaoMongo>>().Value);*/
 
-            services.AddControllers().AddJsonOptions(options => {
-                options.JsonSerializerOptions.IgnoreNullValues = true;
-            });
+            services.AddControllers();
 
         }
 

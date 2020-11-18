@@ -29,6 +29,8 @@ namespace Pokemon.Persistence.DaoMongoDB
             .AddEnvironmentVariables();
 
             _configuration = config.Build();
+
+            Connect();
         }
 
         /// <summary>
@@ -79,6 +81,7 @@ namespace Pokemon.Persistence.DaoMongoDB
         /// <returns></returns>
         public Pokemones Add(Pokemones pokemon)
         {
+            
             _collection = _database.GetCollection<Pokemones>("Pokemones");
             _collection.InsertOne( pokemon );
 
@@ -104,7 +107,8 @@ namespace Pokemon.Persistence.DaoMongoDB
         public List<Pokemones> GetAll()
         {
             _collection = _database.GetCollection<Pokemones>("Pokemones");
-            return _collection.Find(poke => true).ToList();
+            return _collection.Find(_=> true).ToList();
+
         }
 
         /// <summary>
@@ -112,7 +116,7 @@ namespace Pokemon.Persistence.DaoMongoDB
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Pokemones GetById( long id )
+        public Pokemones GetById( int id )
         {
             _collection = _database.GetCollection<Pokemones>("Pokemones");
             return _collection.Find(sub => sub.Id == id).SingleOrDefault();

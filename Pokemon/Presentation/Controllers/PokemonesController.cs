@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 namespace Pokemon.Controllers
 {
     [ApiController]
-    [Route("poke")]
+    [Route("pokemon")]
     public class PokemonesController : ControllerBase
     {
         private readonly ILogger<Common.Entities.Pokemones> _logger;
@@ -31,7 +31,7 @@ namespace Pokemon.Controllers
             {
                 if (ModelState.IsValid && dto != null )
                 {
-                    Entity pokemon = PokemonMapper.MapDtoToEntity(dto);
+                    Pokemones pokemon = PokemonMapper.MapDtoToEntity(dto);
 
                     Command comando;
 
@@ -93,7 +93,7 @@ namespace Pokemon.Controllers
 
                 Command comando;
 
-                comando = new CommandUpdatePokemon(pokemon);
+                comando = new CommandDeletePokemon(pokemon);
 
                 comando.Execute();
             }
@@ -117,11 +117,19 @@ namespace Pokemon.Controllers
 
                 Command comando;
 
-                comando = new CommandUpdatePokemon( pokemon );
+                comando = new  CommandGetByIdPokemon( pokemon );
 
                 comando.Execute();
-
-                dto = PokemonMapper.MapEntityToDto( comando.GetEntity() as Pokemones );
+                Pokemones result = comando.GetEntity() as Pokemones;
+                if( result != null) 
+                {
+                    dto = PokemonMapper.MapEntityToDto(result);
+                }
+                else
+                {
+                    return Ok();
+                }
+              
             }
             catch (Exception e)
             {
